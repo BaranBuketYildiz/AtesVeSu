@@ -79,6 +79,9 @@ public class GamePanel extends JPanel implements KeyListener {
 
         g.setColor(p1.getColor());
         g.fillRect(p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight());
+
+        g.setColor(p2.getColor());
+        g.fillRect(p2.getX(), p2.getY(), p2.getWidth(), p2.getHeight());
     }
 
 }
