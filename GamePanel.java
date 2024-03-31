@@ -9,7 +9,6 @@ public class GamePanel extends JPanel implements KeyListener {
     Player p1;
     Player p2;
 
-
     public GamePanel() {
         setPreferredSize(new Dimension(900, 1200));
         this.addKeyListener(this);
@@ -41,6 +40,23 @@ public class GamePanel extends JPanel implements KeyListener {
                 p1.setX(p1.getX() + 10);
                 repaint();
                 break;
+            case KeyEvent.VK_UP:
+                p1.setY(p1.getY() - 10);
+                repaint();
+                break;
+            case KeyEvent.VK_DOWN:
+                p1.setX(p1.getX() - 10);
+                repaint();
+                break;
+
+            case KeyEvent.VK_LEFT:
+                p1.setY(p1.getY() + 10);
+                repaint();
+                break;
+            case KeyEvent.VK_RIGHT:
+                p1.setX(p1.getX() + 10);
+                repaint();
+                break;
         }
     }
 
@@ -64,7 +80,5 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setColor(p1.getColor());
         g.fillRect(p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight());
     }
-
- 
 
 }
