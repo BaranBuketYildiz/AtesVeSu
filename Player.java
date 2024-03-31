@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 
-public class Player extends JFrame implements KeyListener {
+public class Player extends JFrame implements ActionListener, KeyListener {
 
 
         private Color color;
@@ -14,6 +14,21 @@ public class Player extends JFrame implements KeyListener {
         private int height;
         private int width;
 
+        
+        public Player(int x, int y, int height, int width, Color c){
+                this.x = x;
+                this.y = y;
+                this.height = height;
+                this.width = width;
+                this.color = c;
+
+                addKeyListener(this);
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        // TODO Auto-generated method stub
+        
+        }
         @Override
         public void keyPressed(KeyEvent e) {
         // TODO Auto-generated method stub
@@ -24,14 +39,17 @@ public class Player extends JFrame implements KeyListener {
             case KeyEvent.VK_W:
             System.out.println("w");
                 setY(getY()+10);
+                repaint();
                 break;
             case KeyEvent.VK_A:
             System.out.println("a");
                 setX(getX()-10);
+                repaint();
                 break;      
             case KeyEvent.VK_D:
             System.out.println("D");
                  setX(getX()+10);
+                 repaint();
                   break;
         }
         
@@ -46,17 +64,6 @@ public class Player extends JFrame implements KeyListener {
         // TODO Auto-generated method stub
         
         }
-        public Player(int x, int y, int height, int width, Color c){
-                this.x = x;
-                this.y = y;
-                this.height = height;
-                this.width = width;
-                this.color = c;
-
-                addKeyListener(this);
-        }
-
-
         @Override
         public void paintComponents(Graphics g) {
                 super.paintComponents(g);
