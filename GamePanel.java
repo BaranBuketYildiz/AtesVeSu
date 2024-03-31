@@ -16,6 +16,7 @@ public class GamePanel extends JPanel{
          p1 = new Player(0, 0, 100, 75, Color.red);
 
     }
+    
     @Override
     protected void paintComponent(Graphics g) {
             // TODO Auto-generated method stub
