@@ -9,6 +9,7 @@ public class GamePanel extends JPanel implements KeyListener {
     Player p1;
     Player p2;
 
+
     public GamePanel() {
         setPreferredSize(new Dimension(900, 1200));
         this.addKeyListener(this);
@@ -80,5 +81,7 @@ public class GamePanel extends JPanel implements KeyListener {
         g.setColor(p1.getColor());
         g.fillRect(p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight());
     }
+
+ 
 
 }
