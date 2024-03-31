@@ -1,16 +1,18 @@
 
 import java.awt.*;
+import java.awt.event.*;
+
 import javax.swing.*;
 
 
 public class Player extends JFrame {
 
 
-        Color color;
-        int x;
-        int y;
-        int height;
-        int width;
+        private Color color;
+        private int x;
+        private int y;
+        private int height;
+        private int width;
 
         
 
@@ -20,6 +22,33 @@ public class Player extends JFrame {
                 this.height = height;
                 this.width = width;
                 this.color = c;
+
+                addKeyListener(new KeyAdapter() {
+                        
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            // TODO Auto-generated method stub
+
+                            int keyCode=e.getKeyCode();
+
+                            switch(keyCode){
+                                 
+                                case KeyEvent.VK_W:
+                                System.out.println("w");
+                                    setY(getY()+10);
+                                    break;
+                                case KeyEvent.VK_A:
+                                System.out.println("a");
+                                    setX(getX()-10);
+                                    break;      
+                                case KeyEvent.VK_D:
+                                System.out.println("D");
+                                     setX(getX()+10);
+                                      break;
+                            }
+                            repaint();
+                        }
+                });
         }
 
 
