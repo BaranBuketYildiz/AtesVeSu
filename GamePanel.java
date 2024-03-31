@@ -1,31 +1,29 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class GamePanel extends JFrame{
+
+
+public class GamePanel extends JPanel{
      
 
 
 
-
+    Player p1;
 
     public GamePanel(){
-        setSize(900, 1000);
-        setTitle("ATES VE SU");
-        setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(900, 1200));
+
+         p1 = new Player(0, 0, 100, 75, Color.red);
 
     }
+    @Override
+    protected void paintComponent(Graphics g) {
+            // TODO Auto-generated method stub
+            super.paintComponent(g);
 
-
-    public static void main(String[] args) {
-        System.out.println("baran");
-        SwingUtilities.invokeLater(new Runnable() {
-            
-            @Override
-            public void run() {
-                new GamePanel();    
-            }
-        });
-        
+            g.setColor(p1.getColor());
+            g.fillRect(p1.getX(), p1.getY(), p1.getWidth(), p1.getHeight());
     }
+   
+
 }
