@@ -42,24 +42,24 @@ public class GamePanel extends JPanel implements KeyListener {
                 repaint();
                 break;
             case KeyEvent.VK_UP:
-                p1.setY(p1.getY() - 10);
+                p2.setY(p2.getY() - 10);
                 repaint();
                 break;
             case KeyEvent.VK_DOWN:
-                p1.setX(p1.getX() - 10);
+                p2.setY(p2.getY() + 10);
                 repaint();
                 break;
 
             case KeyEvent.VK_LEFT:
-                p1.setY(p1.getY() + 10);
+                p2.setX(p2.getX() - 10);
                 repaint();
                 break;
             case KeyEvent.VK_RIGHT:
-                p1.setX(p1.getX() + 10);
+                p2.setX(p2.getX() + 10);
                 repaint();
                 break;
         }
-    }
+}
 
     @Override
     public void keyReleased(KeyEvent e) {
