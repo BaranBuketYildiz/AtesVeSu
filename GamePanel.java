@@ -13,8 +13,8 @@ public class GamePanel extends JPanel implements KeyListener {
     public GamePanel() {
         setPreferredSize(new Dimension(900, 1200));
         this.addKeyListener(this);
-        p1 = new Player(0, 0, 100, 75, Color.red);
-        p2 = new Player(0, 0, 100, 75, Color.blue);
+        p1 = new Player(0, 0, 30, 30, Color.red);
+        p2 = new Player(0, 0, 30, 30, Color.blue);
 
         setFocusable(true);
     }
