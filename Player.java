@@ -11,14 +11,17 @@ public class Player extends JComponent {
         private int y;
         private int height;
         private int width;
+        private int speed;
+        
 
       
-        public Player(int x, int y, int height, int width, Color c) {
+        public Player(int x, int y, int height, int width, int speed, Color c) {
                 this.x = x;
                 this.y = y;
                 this.height = height;
                 this.width = width;
                 this.color = c;
+                this.speed = speed;
                 setFocusable(true);
 
         }
@@ -69,5 +72,13 @@ public class Player extends JComponent {
 
         public void setWidth(int width) {
                 this.width = width;
+        }
+
+        public int getSpeed() {
+                return speed;
+        }
+
+        public void setSpeed(int speed) {
+                this.speed = speed;
         }
 }

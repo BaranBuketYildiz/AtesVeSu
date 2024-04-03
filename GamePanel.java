@@ -7,16 +7,54 @@ import java.util.List;
 
 public class GamePanel extends JPanel implements KeyListener {
 
+    final int playerSpeed = 5;
+
+    final int gravity = 3;
+
     Player p1;
     Player p2;
     private List<Integer> keyPressed=new ArrayList<>();
     public GamePanel() {
         setPreferredSize(new Dimension(900, 1200));
         this.addKeyListener(this);
-        p1 = new Player(0, 0, 30, 30, Color.red);
-        p2 = new Player(0, 0, 30, 30, Color.blue);
+        p1 = new Player(0, 0, 30, 30, playerSpeed, Color.red);
+        p2 = new Player(0, 0, 30, 30,playerSpeed, Color.blue);
 
         setFocusable(true);
+    }
+    private void startGameLoop() {
+        Timer timer = new Timer(16, new ActionListener() { // 60 frames per second
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateGameState();
+                repaint();
+            }
+        });
+        timer.start();
+    }
+
+    private void updateGameState() {
+        // Apply gravity to player 1
+        applyGravity(p1);
+
+        // Apply gravity to player 2
+        applyGravity(p2);
+        startGameLoop(); 
+    }
+
+    private void applyGravity(Player player) {
+
+        int newY = player.getY() + gravity;
+        player.setY(newY);
+
+        // Apply gravity acceleration to vertical velocity
+        // double newVerticalVelocity =  + gravity;
+        // player.setVerticalVelocity(Math.min(newVerticalVelocity, MAX_FALL_SPEED));
+
+        // Check for collisions with ground or obstacles
+        // Adjust player position and velocity accordingly
+        // Implement collision detection and response logic here
+        // For simplicity, we assume no collisions in this example
     }
 
     @Override
