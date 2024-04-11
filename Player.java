@@ -1,84 +1,182 @@
 
 import java.awt.*;
 import java.awt.event.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 
-public class Player extends JComponent {
+public class Player extends Entity {
 
-        private Color color;
-        private int x;
-        private int y;
-        private int height;
-        private int width;
-        private int speed;
-        
+        private int speedX = 3;
+        private int speedY = 5;
+        private boolean onGround = false;
+        private int gravity = 4;
+        private int redHealht;
+        private int blueHealht;
+        private int magentaHealht;
 
-      
-        public Player(int x, int y, int height, int width, int speed, Color c) {
-                this.x = x;
-                this.y = y;
-                this.height = height;
-                this.width = width;
-                this.color = c;
-                this.speed = speed;
-                setFocusable(true);
+        private boolean isFacingRight = true;
+
+        private boolean jumping;
+
+        public Player(Color color, int x, int y, int height, int width) {
+                super(color, x, y, height, width);
 
         }
 
-        @Override
-        public void paintComponents(Graphics g) {
-                super.paintComponents(g);
+        private List<Projectile> projectiles = new ArrayList<>();
+        private int projectileSpeed = 10;
 
-                g.setColor(color);
-                g.fillRect(x, y, width, height);
+        public void shoot(boolean isFacingRight) {
+                int direction = isFacingRight ? 1 : -1;
+
+                if (projectiles.size() < 5) {
+                        Projectile projectile = new Projectile(this.getColor(), this.getX(), this.getY(), 5, 5,
+                                        projectileSpeed * direction);
+                        projectiles.add(projectile);
+                }
+
         }
 
-        public Color getColor() {
-                return color;
+        public void switchChar(int charCode) {
+                if (charCode == 1) {
+                        setColor(Color.RED);
+                        setSpeedY(5);
+
+                } else if (charCode == 2) {
+                        setColor(Color.BLUE);
+                        setSpeedY(5);
+
+                } else if (charCode == 3) {
+                        setColor(Color.MAGENTA);
+                        setSpeedY(8);
+                }
+
         }
 
-        public void setColor(Color color) {
-                this.color = color;
+        public void applyGravity(List<Entity> entities) {
+                boolean onGround = false;
+                for (Entity entity : entities) {
+                        if (entity instanceof Ground && this.intersects(entity)) {
+                                onGround = true;
+                                break;
+                        }
+                }
+                if (!onGround) {
+                        move(0, gravity, entities);
+                }
         }
 
-        public int getX() {
-                return x;
+        public void move(int x, int y, List<Entity> entities) {
+                int newX = this.getX() + x;
+                int newY = this.getY() + y;
+                this.setX(newX);
+                this.setY(newY);
+                for (Entity entity : entities) {
+                        if (entity instanceof Ground && this.intersects(entity)) {
+                                if (x > 0) {
+                                        newX = entity.getX() - this.getWidth();
+                                } else if (x < 0) {
+                                        newX = entity.getX() + entity.getWidth();
+                                }
+                                if (y > 0) {
+                                        newY = entity.getY() - this.getHeight();
+                                } else if (y < 0) {
+                                        newY = entity.getY() + entity.getHeight();
+                                }
+                                break;
+                        }
+                }
+                this.setX(newX);
+                this.setY(newY);
         }
 
-        public void setX(int x) {
-                this.x = x;
+        public int getSpeedX() {
+                return speedX;
         }
 
-        public int getY() {
-                return y;
+        public void setSpeedX(int speedX) {
+                this.speedX = speedX;
         }
 
-        public void setY(int y) {
-                this.y = y;
+        public int getSpeedY() {
+                return speedY;
         }
 
-        public int getHeight() {
-                return height;
+        public void setSpeedY(int speedY) {
+                this.speedY = speedY;
         }
 
-        public void setHeight(int height) {
-                this.height = height;
+        public boolean isOnGround() {
+                return onGround;
         }
 
-        public int getWidth() {
-                return width;
+        public void setOnGround(boolean onGround) {
+                this.onGround = onGround;
         }
 
-        public void setWidth(int width) {
-                this.width = width;
+        public int getGravity() {
+                return gravity;
         }
 
-        public int getSpeed() {
-                return speed;
+        public void setGravity(int gravity) {
+                this.gravity = gravity;
         }
 
-        public void setSpeed(int speed) {
-                this.speed = speed;
+        public int getRedHealht() {
+                return redHealht;
         }
+
+        public void setRedHealht(int redHealht) {
+                this.redHealht = redHealht;
+        }
+
+        public int getBlueHealht() {
+                return blueHealht;
+        }
+
+        public void setBlueHealht(int blueHealht) {
+                this.blueHealht = blueHealht;
+        }
+
+        public int getMagentaHealht() {
+                return magentaHealht;
+        }
+
+        public void setMagentaHealht(int magentaHealht) {
+                this.magentaHealht = magentaHealht;
+        }
+
+        public boolean isJumping() {
+                return jumping;
+        }
+
+        public void setJumping(boolean jumping) {
+                this.jumping = jumping;
+        }
+
+        public List<Projectile> getProjectiles() {
+                return projectiles;
+        }
+
+        public void setProjectiles(List<Projectile> projectiles) {
+                this.projectiles = projectiles;
+        }
+
+        public int getProjectileSpeed() {
+                return projectileSpeed;
+        }
+
+        public void setProjectileSpeed(int projectileSpeed) {
+                this.projectileSpeed = projectileSpeed;
+        }
+
+        public boolean isFacingRight() {
+                return isFacingRight;
+        }
+
+        public void setFacingRight(boolean isFacingRight) {
+                this.isFacingRight = isFacingRight;
+        }
+
 }

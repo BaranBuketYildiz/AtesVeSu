@@ -6,14 +6,17 @@ public class MainFrame extends JFrame {
         public MainFrame() {
 
                 panel = new GamePanel();
-
                 setTitle("ATES VE SU");
                 setVisible(true);
                 setDefaultCloseOperation(EXIT_ON_CLOSE);
                 setBackground(Color.WHITE);
-
+                
+                panel.requestFocusInWindow();
 
                 add(panel);
+                pack();
+                panel.start();
+                
 
         }
 
@@ -21,10 +24,10 @@ public class MainFrame extends JFrame {
     public static void main(String[] args) {
         System.out.println("baran");
         SwingUtilities.invokeLater(new Runnable() {
-            
+
             @Override
             public void run() {
-                new GamePanel();    
+                new MainFrame();    
             }
         });
         
