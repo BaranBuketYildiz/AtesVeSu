@@ -4,6 +4,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
+import java.util.Iterator;
 
 public class Player extends Entity {
 
@@ -11,9 +12,8 @@ public class Player extends Entity {
         private int speedY = 5;
         private boolean onGround = false;
         private int gravity = 4;
-        private int redHealht;
-        private int blueHealht;
-        private int magentaHealht;
+        private int score = 0;
+        
 
         private boolean isFacingRight = true;
 
@@ -72,21 +72,30 @@ public class Player extends Entity {
                 int newY = this.getY() + y;
                 this.setX(newX);
                 this.setY(newY);
-                for (Entity entity : entities) {
-                        if (entity instanceof Ground && this.intersects(entity)) {
-                                if (x > 0) {
-                                        newX = entity.getX() - this.getWidth();
-                                } else if (x < 0) {
-                                        newX = entity.getX() + entity.getWidth();
+
+                Iterator<Entity> iterator = entities.iterator();
+                while (iterator.hasNext()) {
+                        Entity entity = iterator.next();
+                        if (this.intersects(entity)) {
+                                if (entity instanceof Ground) {
+                                        if (x > 0) {
+                                                newX = entity.getX() - this.getWidth();
+                                        } else if (x < 0) {
+                                                newX = entity.getX() + entity.getWidth();
+                                        }
+                                        if (y > 0) {
+                                                newY = entity.getY() - this.getHeight();
+                                        } else if (y < 0) {
+                                                newY = entity.getY() + entity.getHeight();
+                                        }
+                                } else if (entity instanceof Coin && !(this instanceof Monster)
+                                                && this.intersects(entity)) {
+                                        iterator.remove();
+                                        this.score++;
                                 }
-                                if (y > 0) {
-                                        newY = entity.getY() - this.getHeight();
-                                } else if (y < 0) {
-                                        newY = entity.getY() + entity.getHeight();
-                                }
-                                break;
                         }
                 }
+
                 this.setX(newX);
                 this.setY(newY);
         }
@@ -123,30 +132,6 @@ public class Player extends Entity {
                 this.gravity = gravity;
         }
 
-        public int getRedHealht() {
-                return redHealht;
-        }
-
-        public void setRedHealht(int redHealht) {
-                this.redHealht = redHealht;
-        }
-
-        public int getBlueHealht() {
-                return blueHealht;
-        }
-
-        public void setBlueHealht(int blueHealht) {
-                this.blueHealht = blueHealht;
-        }
-
-        public int getMagentaHealht() {
-                return magentaHealht;
-        }
-
-        public void setMagentaHealht(int magentaHealht) {
-                this.magentaHealht = magentaHealht;
-        }
-
         public boolean isJumping() {
                 return jumping;
         }
@@ -177,6 +162,14 @@ public class Player extends Entity {
 
         public void setFacingRight(boolean isFacingRight) {
                 this.isFacingRight = isFacingRight;
+        }
+
+        public int getScore() {
+                return score;
+        }
+
+        public void setScore(int score) {
+                this.score = score;
         }
 
 }

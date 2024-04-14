@@ -2,24 +2,23 @@ import java.awt.*;
 import javax.swing.*;
 
 public class MainFrame extends JFrame {
-        GamePanel panel;
-        public MainFrame() {
+    GamePanel panel;
 
-                panel = new GamePanel();
-                setTitle("ATES VE SU");
-                setVisible(true);
-                setDefaultCloseOperation(EXIT_ON_CLOSE);
-                setBackground(Color.WHITE);
-                
-                panel.requestFocusInWindow();
+    public MainFrame() {
+        
+        panel = new GamePanel();
+        add(panel);
+        panel.start();
+        setTitle("ATES VE SU");
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setBackground(Color.WHITE);
 
-                add(panel);
-                pack();
-                panel.start();
-                
+        panel.requestFocusInWindow();
 
-        }
+        pack();
 
+    }
 
     public static void main(String[] args) {
         System.out.println("baran");
@@ -27,9 +26,9 @@ public class MainFrame extends JFrame {
 
             @Override
             public void run() {
-                new MainFrame();    
+                new MainFrame();
             }
         });
-        
+
     }
 }

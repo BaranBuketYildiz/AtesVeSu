@@ -10,4 +10,8 @@ public class Ground extends Entity {
                 super(color, x, y, height, width);
         }
 
+        public void addCoins(){
+                
+        }
+
 }

@@ -7,8 +7,9 @@ import java.util.List;
 
 public class GamePanel extends JPanel implements KeyListener, Runnable {
 
-    final static int panelWidth = 900;
-    final static int panelHeight = 600;
+    final static int panelWidth = 1200;
+    final static int panelHeight = 800;
+    final static int groundHeight = 10;
     Player p1;
     List<Entity> entities = new ArrayList<>();
     private boolean[] keyPressed = new boolean[256]; // Using boolean array to track key states
@@ -18,24 +19,60 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     public GamePanel() {
 
+        p1 = new Player(Color.RED, 15, panelHeight - 30, 20, 20);
         setPreferredSize(new Dimension(panelWidth, panelHeight));
         addKeyListener(this);
         setFocusable(true);
         setBackground(Color.WHITE);
+        setDoubleBuffered(true);
 
+        // maze
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 60, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 80, panelHeight - 110, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 160, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 80, panelHeight - 210, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 260, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 80, panelHeight - 310, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 360, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 80, panelHeight - 410, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 460, groundHeight, panelWidth - 80));
+
+        entities.add(new Ground(Color.BLACK, 80, panelHeight - 510, groundHeight, panelWidth - 80));
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 560, groundHeight, panelWidth - 80));
+
+        List<Entity> coinsToAdd = new ArrayList<>();
+
+        for (Entity entity : entities) {
+            if (entity instanceof Ground) {
+                int startX = entity.getX() - 13;
+                int startY = entity.getY() - 13;
+                int groundWidth = entity.getWidth();
+                for (int i = 0; i < groundWidth / 60; i++) {
+                    coinsToAdd.add(new Coin(startX, startY));
+                    startX += 60;
+                }
+            }
+        }
+
+        entities.addAll(coinsToAdd);
+
+        // 4 ground object for sides
         entities.add(new Ground(Color.BLACK, 0, 0, 15, panelWidth));
-        entities.add(new Ground(Color.BLACK, 0, panelHeight - 40, 15, panelWidth));
+        entities.add(new Ground(Color.BLACK, 0, panelHeight - 10, 15, panelWidth));
         entities.add(new Ground(Color.BLACK, 0, 0, panelHeight, 15));
-
         entities.add(new Ground(Color.BLACK, panelWidth - 10, 0, panelHeight, 15));
-        entities.add(new Ground(Color.BLACK, 0, 50, 15, panelWidth - 80));
-        entities.add(new Ground(Color.BLACK, 80, 100, 15, panelWidth - 80));
 
-        entities.add(new Ground(Color.red, 160, 150, 15, panelWidth - 80));
+        entities.add(new Ground(Color.red, 160, 150, 15, panelWidth - 300));
 
-        p1 = new Player(Color.RED, 15, 500, 20, 20);
-
-        m1 = new Monster(Color.YELLOW, 300, 200, 50, 50, 3);
+        m1 = new Monster(Color.DARK_GRAY, 300, 200, 40, 40, 3);
 
         entities.add(m1);
 
@@ -78,7 +115,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
         if (keyPressed[KeyEvent.VK_W]) {
             p1.move(0, -1 * p1.getSpeedY(), entities);
-
         }
         if (keyPressed[KeyEvent.VK_A]) {
             p1.move(-1 * p1.getSpeedX(), 0, entities);
@@ -124,25 +160,28 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             g.setColor(projectile.getColor());
             g.fillRect(projectile.getX(), projectile.getY(), projectile.getWidth(), projectile.getHeight());
 
-            // Check for collision with monsters or other entities
             for (Entity entity : entities) {
                 if (entity instanceof Monster && projectile.intersects(entity)) {
-                    // Perform action when projectile hits a monster
-                    Monster monster = ((Monster)entity);
-                    // For example, remove the monster
-                    iterator.remove(); // Remove the projectile
-                    monster.setHealth(monster.getHealth()-1);
-                    if(monster.getHealth() < 1){
+                    // when projectile hits a monster
+                    Monster monster = ((Monster) entity);
+                    iterator.remove();
+                    monster.setHealth(monster.getHealth() - 1);
+                    if (monster.getHealth() < 1) {
                         entities.remove(entity);
                     }
-                    break; // Exit the loop after handling the collision
+                    break;
                 }
             }
-
+            // Remove the projectile
             if (projectile.getX() > panelWidth || projectile.getX() < 0) {
-                iterator.remove(); // Remove the projectile
+                iterator.remove();
             }
         }
+
+        // Draw score
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+        g.drawString("Score: " + p1.getScore(), 20, 30);
 
     }
 
