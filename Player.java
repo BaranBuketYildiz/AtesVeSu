@@ -13,7 +13,7 @@ public class Player extends Entity {
         private boolean onGround = false;
         private int gravity = 4;
         private int score = 0;
-        
+        private int health = 3;
 
         private boolean isFacingRight = true;
 
@@ -88,10 +88,13 @@ public class Player extends Entity {
                                         } else if (y < 0) {
                                                 newY = entity.getY() + entity.getHeight();
                                         }
-                                } else if (entity instanceof Coin && !(this instanceof Monster)
+                                } else if (entity instanceof Coin
                                                 && this.intersects(entity)) {
                                         iterator.remove();
+
                                         this.score++;
+                                } else if (entity instanceof Monster && this.intersects(entity)) {
+                                        this.setHealth(this.getHealth() - 1);
                                 }
                         }
                 }
@@ -170,6 +173,14 @@ public class Player extends Entity {
 
         public void setScore(int score) {
                 this.score = score;
+        }
+
+        public int getHealth() {
+                return health;
+        }
+
+        public void setHealth(int health) {
+                this.health = health;
         }
 
 }

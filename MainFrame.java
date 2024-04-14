@@ -23,7 +23,6 @@ public class MainFrame extends JFrame {
     public static void main(String[] args) {
         System.out.println("baran");
         SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 new MainFrame();

@@ -13,18 +13,22 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     Player p1;
     List<Entity> entities = new ArrayList<>();
     private boolean[] keyPressed = new boolean[256]; // Using boolean array to track key states
+    private long startTime;
+    private long currentTime;
+    private long playTime;
+    private String formattedTime;
 
     Thread game;
-    Monster m1;
+
+    
 
     public GamePanel() {
-
+        startTime = System.currentTimeMillis();
         p1 = new Player(Color.RED, 15, panelHeight - 30, 20, 20);
         setPreferredSize(new Dimension(panelWidth, panelHeight));
         addKeyListener(this);
         setFocusable(true);
         setBackground(Color.WHITE);
-        setDoubleBuffered(true);
 
         // maze
         entities.add(new Ground(Color.BLACK, 0, panelHeight - 60, groundHeight, panelWidth - 80));
@@ -72,10 +76,14 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
         entities.add(new Ground(Color.red, 160, 150, 15, panelWidth - 300));
 
-        m1 = new Monster(Color.DARK_GRAY, 300, 200, 40, 40, 3);
-
+        Monster m1 = new Monster(Color.BLUE, 300, 200, 40, 40, 15, 3);
+        Monster m2 = new Monster(Color.RED, 300, 600, 40, 40, 15, 3);
+        Monster m3 = new Monster(Color.YELLOW, 300, 700, 40, 40, 15, 3);
+       
+        
         entities.add(m1);
-
+        entities.add(m2);
+        entities.add(m3);
         entities.add(p1);
 
     }
@@ -107,11 +115,41 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         }
     }
 
+    private void endGame() {
+        JOptionPane.showMessageDialog(this, "Game Over!\nScore: " + p1.getScore() + "\nTime: " + formattedTime,
+                "Game Over", JOptionPane.INFORMATION_MESSAGE);
+
+        System.exit(0);
+    }
+
+    private String formatTime(long milliseconds) {
+        long seconds = (milliseconds / 1000) % 60;
+        long minutes = (milliseconds / (1000 * 60)) % 60;
+        String timeString = String.format("%02d:%02d", minutes, seconds);
+        return timeString;
+    }
+
     public void update() {
+        long currentTime = System.currentTimeMillis();
+        formattedTime = formatTime(currentTime - startTime);
+
+        if (p1.getHealth() < 1) {
+            stop();
+            endGame();
+        }
+        for (Entity entity : entities) {
+            if (entity instanceof Monster) {
+                Monster m = ((Monster) entity);
+                m.move(entities);
+                m.applyGravity(4,entities);
+
+            }
+
+        }
         p1.applyGravity(entities);
 
-        m1.applyGravity(entities);
-        m1.move(entities);
+        // m1.applyGravity(entities);
+        // m1.move(entities);
 
         if (keyPressed[KeyEvent.VK_W]) {
             p1.move(0, -1 * p1.getSpeedY(), entities);
@@ -149,7 +187,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
         for (Entity entity : entities) {
             g.setColor(entity.getColor());
             g.fillRect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
@@ -160,18 +197,25 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             g.setColor(projectile.getColor());
             g.fillRect(projectile.getX(), projectile.getY(), projectile.getWidth(), projectile.getHeight());
 
-            for (Entity entity : entities) {
+            Iterator<Entity> iterator2 = entities.iterator();
+            while (iterator2.hasNext()) {
+                Entity entity = iterator2.next();
                 if (entity instanceof Monster && projectile.intersects(entity)) {
-                    // when projectile hits a monster
-                    Monster monster = ((Monster) entity);
                     iterator.remove();
-                    monster.setHealth(monster.getHealth() - 1);
-                    if (monster.getHealth() < 1) {
-                        entities.remove(entity);
+                    
+                    Monster monster = (Monster) entity;
+                    
+                    if (!projectile.getColor().equals(monster.getColor())) {
+                        monster.setMonsterHealth(monster.getMonsterHealth() - 1);
+                        System.out.println("After: " + monster.getMonsterHealth());
+                        if (monster.getMonsterHealth() < 1) {
+                            iterator2.remove(); 
+                            p1.setScore(p1.getScore() + 100);
+                        }
                     }
-                    break;
                 }
             }
+
             // Remove the projectile
             if (projectile.getX() > panelWidth || projectile.getX() < 0) {
                 iterator.remove();

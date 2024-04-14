@@ -1,27 +1,54 @@
 import java.awt.Color;
 import java.util.List;
 
-public class Monster extends Player {
+public class Monster extends Entity {
 
-        private int health = 100;
+        private int monsterHealth;
         private int monsterSpeedX;
-        
-        
-        public Monster(Color color, int x, int y, int height, int width,  int monsterSpeedX) {
+
+        public Monster(Color color, int x, int y, int height, int width, int monsterHealth, int monsterSpeedX) {
                 super(color, x, y, height, width);
-                this.health = health;
+                this.monsterHealth = monsterHealth;
                 this.monsterSpeedX = monsterSpeedX;
+        }
+
+        public void applyGravity(int gravity, List<Entity> entities) {
+                boolean onGround = false;
+                for (Entity entity : entities) {
+                        if (entity instanceof Ground && this.intersects(entity)) {
+                                onGround = true;
+                                break;
+                        }
+                }
+                if (!onGround) {
+                        fall(gravity, entities);
+                }
+        }
+
+        public void fall(int gravity, List<Entity> entities) {
+                int newY = this.getY() + gravity;
+                this.setY(newY);
+                for (Entity entity : entities) {
+
+                        if (entity instanceof Ground && this.intersects(entity)) {
+                                setY(gravity);
+                                newY = entity.getY() - this.getWidth();
+                                break;
+                        }
+                }
+                this.setY(newY);
         }
 
         public void move(List<Entity> entities) {
                 int newX = this.getX() + this.getMonsterSpeedX();
                 this.setX(newX);
                 for (Entity entity : entities) {
+
                         if (entity instanceof Ground && this.intersects(entity)) {
-                                if ( this.getMonsterSpeedX() > 0) {
+                                if (this.getMonsterSpeedX() > 0) {
                                         setMonsterSpeedX(-1 * getMonsterSpeedX());
                                         newX = entity.getX() - this.getWidth();
-                                } else if ( this.getMonsterSpeedX() < 0) {
+                                } else if (this.getMonsterSpeedX() < 0) {
                                         setMonsterSpeedX(-1 * getMonsterSpeedX());
                                         newX = entity.getX() + entity.getWidth();
                                 }
@@ -36,19 +63,20 @@ public class Monster extends Player {
                 this.setX(newX);
         }
 
-        public int getHealth() {
-                return health;
-        }
-
-        public void setHealth(int health) {
-                this.health = health;
-        }
-
         public int getMonsterSpeedX() {
                 return monsterSpeedX;
         }
 
         public void setMonsterSpeedX(int monsterSpeedX) {
+                System.out.println("call");
                 this.monsterSpeedX = monsterSpeedX;
+        }
+
+        public int getMonsterHealth() {
+                return monsterHealth;
+        }
+
+        public void setMonsterHealth(int monsterHealth) {
+                this.monsterHealth = monsterHealth;
         }
 }
