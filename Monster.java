@@ -29,7 +29,6 @@ public class Monster extends Entity {
                 int newY = this.getY() + gravity;
                 this.setY(newY);
                 for (Entity entity : entities) {
-
                         if (entity instanceof Ground && this.intersects(entity)) {
                                 setY(gravity);
                                 newY = entity.getY() - this.getWidth();

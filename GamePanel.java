@@ -14,13 +14,12 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     List<Entity> entities = new ArrayList<>();
     private boolean[] keyPressed = new boolean[256]; // Using boolean array to track key states
     private long startTime;
-    private long currentTime;
-    private long playTime;
+    private long trackerTime = 0;
     private String formattedTime;
 
-    Thread game;
+    private MonsterSpawner monsterSpawner;
 
-    
+    Thread game;
 
     public GamePanel() {
         startTime = System.currentTimeMillis();
@@ -79,13 +78,14 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         Monster m1 = new Monster(Color.BLUE, 300, 200, 40, 40, 15, 3);
         Monster m2 = new Monster(Color.RED, 300, 600, 40, 40, 15, 3);
         Monster m3 = new Monster(Color.YELLOW, 300, 700, 40, 40, 15, 3);
-       
-        
+
         entities.add(m1);
         entities.add(m2);
         entities.add(m3);
         entities.add(p1);
 
+        monsterSpawner = new MonsterSpawner(new Color(144, 12, 63), (panelWidth/2)-75, 15, 135, 150);
+        entities.add(monsterSpawner);
     }
 
     @Override
@@ -131,7 +131,23 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
 
     public void update() {
         long currentTime = System.currentTimeMillis();
-        formattedTime = formatTime(currentTime - startTime);
+
+
+        formattedTime = formatTime(currentTime - startTime); 
+
+        long timeSinceLastSpawn = currentTime - trackerTime;
+
+        // Every 5 seconds, spawn a monster with some randomization
+        if (timeSinceLastSpawn >= 5000) { // If it's been 5 seconds or more
+            trackerTime = currentTime; // Update trackerTime to current time
+            entities.add(monsterSpawner.spawnMonster()); // Add a new monster to the game
+        }
+
+
+        
+
+
+        
 
         if (p1.getHealth() < 1) {
             stop();
@@ -141,7 +157,7 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
             if (entity instanceof Monster) {
                 Monster m = ((Monster) entity);
                 m.move(entities);
-                m.applyGravity(4,entities);
+                m.applyGravity(4, entities);
 
             }
 
@@ -190,6 +206,19 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
         for (Entity entity : entities) {
             g.setColor(entity.getColor());
             g.fillRect(entity.getX(), entity.getY(), entity.getWidth(), entity.getHeight());
+            // for monster health text
+            if (entity instanceof Monster) {
+                Monster monster = ((Monster) entity);
+                int textX = monster.getX() + monster.getWidth() / 2; // Center the text horizontally
+                int textY = monster.getY() + monster.getHeight() / 2; // Center the text vertically
+
+                // Set font and color for text
+                g.setColor(Color.BLACK); // White text should be visible against most backgrounds
+                g.setFont(new Font("Arial", Font.BOLD, 12)); // Choose a visible font and size
+
+                // Draw the monster's health as text
+                g.drawString(String.valueOf(monster.getMonsterHealth()), textX - 5, textY + 5);
+            }
         }
         Iterator<Projectile> iterator = p1.getProjectiles().iterator();
         while (iterator.hasNext()) {
@@ -202,14 +231,14 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
                 Entity entity = iterator2.next();
                 if (entity instanceof Monster && projectile.intersects(entity)) {
                     iterator.remove();
-                    
+
                     Monster monster = (Monster) entity;
-                    
+
                     if (!projectile.getColor().equals(monster.getColor())) {
                         monster.setMonsterHealth(monster.getMonsterHealth() - 1);
                         System.out.println("After: " + monster.getMonsterHealth());
                         if (monster.getMonsterHealth() < 1) {
-                            iterator2.remove(); 
+                            iterator2.remove();
                             p1.setScore(p1.getScore() + 100);
                         }
                     }
@@ -249,4 +278,6 @@ public class GamePanel extends JPanel implements KeyListener, Runnable {
     public void keyTyped(KeyEvent e) {
 
     }
+
+    
 }

@@ -72,7 +72,7 @@ public class Player extends Entity {
                 int newY = this.getY() + y;
                 this.setX(newX);
                 this.setY(newY);
-
+                
                 Iterator<Entity> iterator = entities.iterator();
                 while (iterator.hasNext()) {
                         Entity entity = iterator.next();
